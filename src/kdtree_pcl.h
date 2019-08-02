@@ -24,23 +24,25 @@ struct KdTree
 			*node = new Node(point, id);
 		}
 		else {
-			uint cd = depth % 3;
+			int cd = depth % 3;
 
 			if (cd==0) {
-				if (point.x < (*node)->point.x)  {
+				if (point.x < (*node)->point.x)
 					insertNode(&((*node)->left), depth+1, point, id);
-				}
-				else {
+				else
 					insertNode(&((*node)->right), depth+1, point, id);
-				}
+			}
+			else if (cd ==1) {
+				if (point.y < (*node)->point.y)
+					insertNode(&((*node)->left), depth+1, point, id);
+				else
+					insertNode(&((*node)->right), depth+1, point, id);
 			}
 			else {
-				if (point.y < (*node)->point.y)  {
+				if (point.z < (*node)->point.z)
 					insertNode(&((*node)->left), depth+1, point, id);
-				}
-				else {
+				else
 					insertNode(&((*node)->right), depth+1, point, id);
-				}
 			}
 		}
 	}
@@ -60,35 +62,38 @@ struct KdTree
 		if (parent_node != NULL) {
 			float delta_x = parent_node->point.x - target.x;
 			float delta_y = parent_node->point.y - target.y;
+			float delta_z = parent_node->point.z - target.z;
 
 			if ((-distanceTol<=delta_x && distanceTol>=delta_x) &&
-								(-distanceTol<=delta_y && distanceTol>=delta_y)) {
-				float distance = sqrt(delta_x*delta_x + delta_y*delta_y);
+								(-distanceTol<=delta_y && distanceTol>=delta_y) &&
+									(-distanceTol<=delta_z && distanceTol>=delta_z)) {
+				float distance = sqrt(delta_x*delta_x + delta_y*delta_y + delta_z*delta_z);
 				// check distance
 				if (distance<=distanceTol) {
 					ids.push_back(parent_node->id);
 				}
 			}
 
-			if (depth % 3 == 0) // 3 dim kd-tree
+			if (depth % 3 == 0) // 3 dim kd-tree - x-axis
 			{
-				if (-distanceTol < delta_x) {
+				if (-distanceTol < delta_x)
 					searchForKDTreeNeighbors(ids, target, distanceTol, parent_node->left, depth+1);
-				}
-
-				if (distanceTol > delta_x) {
+				if (distanceTol > delta_x)
 					searchForKDTreeNeighbors(ids, target, distanceTol, parent_node->right, depth+1);
-				}
 			}
-			else
+			else if (depth % 3 == 1) // y-axis
 			{
-				if (-distanceTol < delta_y) {
+				if (-distanceTol < delta_y)
 					searchForKDTreeNeighbors(ids, target, distanceTol, parent_node->left, depth+1);
-				}
-
-				if (distanceTol > delta_y) {
+				if (distanceTol > delta_y)
 					searchForKDTreeNeighbors(ids, target, distanceTol, parent_node->right, depth+1);
-				}
+			}
+			else // z-axis
+			{
+				if (-distanceTol < delta_z)
+					searchForKDTreeNeighbors(ids, target, distanceTol, parent_node->left, depth+1);
+				if (distanceTol > delta_z)
+					searchForKDTreeNeighbors(ids, target, distanceTol, parent_node->right, depth+1);
 			}
 
 		}
