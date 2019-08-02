@@ -87,8 +87,8 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
   // hyperparameters
   // filter params
   float filterRes = 0.4;
-  Eigen::Vector4f minPoint(-10, -8, -2, 1);
-  Eigen::Vector4f maxPoint(30, 8, 1, 1);
+  Eigen::Vector4f minPoint(-10, -6.5, -2, 1);
+  Eigen::Vector4f maxPoint(30, 6.5, 1, 1);
   // segment params
   int maxIter = 40;
   float distanceThreshold = 0.3;
